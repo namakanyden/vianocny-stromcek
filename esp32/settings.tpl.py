@@ -1,15 +1,15 @@
+# this is just a template file. modify it to your needs
+
 from machine import unique_id
 import ubinascii
 
 
-# WIFI_NETS
+# wifi networks
 WIFI_NETWORKS = {
-    'IoTLab':  'hello.world',
-    'J14P3B7': 'PlmkO098',
-    'chalupka': 'u.nas.doma'
+    'ssid':  'password',
 }
 
-# MQTT_BROKER
+# configuration for connecting to MQTT broker
 MQTT_BROKER = {
     'broker-ip': 'broker.hivemq.com',
     'port': 1883,
