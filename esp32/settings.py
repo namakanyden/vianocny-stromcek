@@ -18,7 +18,7 @@ MQTT_BROKER = {
 }
 
 # timeout (in millis) for watchdog timer
-WDT_TIMEOUT = 300 * 1000
+WDT_TIMEOUT = 30 * 1000
 
 # NeoPixel configuration
 NEOPIXEL = {
