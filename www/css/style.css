@@ -1,0 +1,50 @@
+body{
+    font-family: 'Courier New', Courier, monospace;
+    min-width: 300px;
+    background: url('../assets/background.png') scroll 100%; 
+}
+
+.title{
+    background-color: rgb(248, 93, 72);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 3rem;
+    color: wheat;
+    padding: 1rem;
+    text-align: center;
+    font-weight: bolder;
+}
+
+.container-md{
+    padding-top: 1.5rem;
+    background-color: rgb(248, 93, 72);
+}
+
+.light-scene{
+    width: 17rem;
+}
+
+.light-scene >.button{
+    width: 5rem;
+}
+
+.form-text{
+    color: wheat;
+}
+
+.label{
+    color: wheat;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.btn{
+    border-color: #42785d ;
+    background-color: #42785d;
+}
+
+footer{
+    background-color: #42785dad;
+    height: 5.2rem;
+    padding-top: 0.6rem;
+}
+
