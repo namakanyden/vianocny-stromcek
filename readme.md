@@ -6,6 +6,7 @@ Riadenie stromčeka je realizované pomocou mikrokontroléra _ESP32_, ku ktorém
 
 Poznámka: Nie je problém vytvoriť podobnú realizáciu pomocou iných mikrokontrolérov alebo priamo pomocou Raspberry Pi a to aj v inom jazyku ako je Python. Pre fungovanie je dôležité zachovať len formát správ a rovnaký MQTT broker.
 
+
 ## Prevedenie
 
 Projekt sa skladá zo štyroch častí:
@@ -15,16 +16,46 @@ Projekt sa skladá zo štyroch častí:
 -   z webovej stránky, a
 -   zo živého vysielania.
 
-### MQTT broker
+
+## MQTT broker
 
 MQTT broker funguje ako prostredník pre komunikáciu medzi webovým klientom a mikrokontrolérom ovládajúcim stromček. Týmto spôsobom je možné stromček umiestniť aj do domácej siete a vďaka MQTT brokeru bude ovládateľný z ľubovoľného miesta na svete.
 
 Ako MQTT broker môžete použiť napr. verejný [HiveMQ](https://www.hivemq.com/public-mqtt-broker/) alebo [Eclipse Mosquitto](https://mosquitto.org), ktorý je dostupný v repozitároch štandardných linuxových distribúcií, ako aj na [Raspberry OS](https://www.raspberrypi.org/software/).
 
+
+## Formát správ
+
+Správy sa prenášajú vo formáte *JSON*. V princípe sa dá stretnúť s dvoma typmi správ:
+
+
+### Spustenie zvoleného scenára
+
+```json
+{
+    "scenario": "random color",
+    "color": "#563d7c",
+    "duration": 100
+}
+```
+
+### Rozsvietenie zvolenej žiarovky na stromčeku
+
+```json
+{
+    "scenario": "part of tree",
+    "color": "#563d7c",
+    "index": 3,
+    "parts": 14
+}
+```
+
+
 ## Štruktúra projektu
 
 -   `esp32/` - zdrojové kódy v jazyku MicroPython pre mikrokontrolér ESP32
 -   `www/` - zdrojové kódy webovej stránky na ovládanie stromčeka na diaľku
+
 
 ## Zdroje
 
