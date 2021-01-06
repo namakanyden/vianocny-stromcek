@@ -2,15 +2,18 @@
 
 Riadenie stromčeka je realizované pomocou mikrokontroléra ESP32 v jazyku MicroPython.
 
+
 ## Zapojenie
 
 Pre pripojenie NeoPixel svetiel sa tiež odporúča medzi mikrokontrolér a svetlá zapojiť do série malý odpor. Pri našom testovaní sme však s 330ohm odporom nevedeli NeoPixel svetlá rozsvietiť. Realizovali sme teda zapojenie bez tohto odporu.
+
 
 ## Inštalácia
 
 Na realizáciu nie je potrebné sťahovať a inštalovať žiadnu ďalšiu knižnicu. Všetko potrebné je už obsiahnuté priamo v obraze MicroPython-u pre tento mikrokontrolér.
 
 Jednotlivé súbory projektu stačí prekopírovať na mikrokontrolér ESP32.
+
 
 ## Konfigurácia
 
@@ -26,6 +29,9 @@ Konfigurácia sa nachádza v súbore `settings.py`. Význam jednotlivých možno
 -   `NEOPIXEL` - Slovník združujúci konfiguráciu svetiel NeoPixel. Zoznam kľúčov:
     -   `pin` - obsahuje číslo pin-u, ku ktorému sú svetlá pripojené
     -   `pixels` - počet svetiel
+
+Pre vytvorenie konfiguračného súboru s vašimi nastaveniami použite šablónu `settings.tpl.py`.
+
 
 # Ďalšie zdroje
 

@@ -13,7 +13,7 @@ WIFI_NETWORKS = {
 MQTT_BROKER = {
     'broker-ip': 'broker.hivemq.com',
     'port': 1883,
-    'client-id': ubinascii.hexlify(unique_id()),  #'iotlab-vianocny-stromcek',
+    'client-id': ubinascii.hexlify(unique_id()),
     'topics': ('iotlab/things/stromcek',)
 }
 
