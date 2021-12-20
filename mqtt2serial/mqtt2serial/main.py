@@ -9,7 +9,7 @@ import argparse
 # create serial object
 serial = Serial()
 
-logging.basicConfig(encoding='utf-8', level=logging.DEBUG, format='%(asctime)s: %(message)s')
+logging.basicConfig(encoding='utf-8', level=logging.INFO, format='%(asctime)s: %(message)s')
 logger = logging.getLogger('mqtt2serial')
 
 
@@ -21,12 +21,12 @@ def on_message(client: mqtt.Client, userdata, msg: mqtt.MQTTMessage):
 
         # decode and log received message
         message = msg.payload.decode('ascii')
-        logger.debug(f'received "{message}"')
+        logger.info(f'Received message "{message}"')
 
         # write message to serial port
         serial.write(message.encode('ascii'))
         serial.write(b'\r\n')
-        logger.info(f'Message was written to {serial.port}')
+        logger.info(f'Message was written to serial port {serial.port}')
         serial.close()
 
     except Exception as ex:
@@ -42,7 +42,6 @@ def main():
                         help='MQTT broker port')
     parser.add_argument('--host', type=str, default='broker.hivemq.com',
                         help='address of MQTT broker')
-
     parser.add_argument('--topic', type=str, default='namakanyden/things/stromcek',
                         help='name of the topic where to listen')
     parser.add_argument('--serial', type=str, help='serial port', required=True)
@@ -63,7 +62,6 @@ def main():
         client.connect(args.host, port=args.port)
         client.on_message = on_message
         client.subscribe(args.topic)
-        logger.info('connected')
 
         # loop
         client.loop_forever()
