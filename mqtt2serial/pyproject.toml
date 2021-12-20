@@ -8,9 +8,9 @@ authors = ["Miroslav Biňas <miroslav.binas@tuke.sk>"]
 python = "^3.10"
 paho-mqtt = "^1.6.1"
 pyserial = "^3.5"
-ipython = "^7.29.0"
 
 [tool.poetry.dev-dependencies]
+ipython = "^7.30.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
