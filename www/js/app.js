@@ -12,7 +12,7 @@ function onConnectionLost(responseObject) {
     }
 }
 
-function publish_message(client, payload) {
+function publishMessage(client, payload) {
     const msg = JSON.stringify(payload);
     console.log(`>> sending payload ${msg}.`);
 
@@ -20,6 +20,19 @@ function publish_message(client, payload) {
     message.destinationName = mqtt.topic;
     message.retained = true;
     client.send(message);
+}
+
+/**
+ * Converts hex color format to tuple/list
+ */
+function convertColorHexToList(color){
+    // extract red, green and blue from color
+    const color10 = parseInt(color.substr(1), 16);
+    const red = (color10 >> 16) & 255;
+    const green = (color10 >> 8) & 255;
+    const blue = (color10 >> 0) & 255;
+
+    return [ red, green, blue ];
 }
 
 window.addEventListener("load", function (event) {
@@ -41,12 +54,12 @@ window.addEventListener("load", function (event) {
             // prepare data
             const payload = {
                 scenario: animation,
-                color: color,
+                color: convertColorHexToList(color),
                 duration: delay,
             };
 
             // send message
-            publish_message(client, payload);
+            publishMessage(client, payload);
         });
 
     // show description, when selection has changed
@@ -77,15 +90,16 @@ window.addEventListener("load", function (event) {
                 // console.log(`>> Clicked light ${index} with coords ${light}.`);
 
                 // prepare the payload
+                color = document.getElementById("colorpicker").value;
                 payload = {
                     scenario: "part of tree",
-                    color: document.getElementById("colorpicker").value,
+                    color: convertColorHexToList(color),
                     index: index, // index of selected light/part
                     parts: 14, // number of all lights on the image
                 };
 
                 // send message
-                publish_message(client, payload);
+                publishMessage(client, payload);
             }
         });
     });

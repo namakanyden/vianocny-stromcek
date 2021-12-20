@@ -2,7 +2,7 @@
 const mqtt = {
     broker: "broker.hivemq.com",
     port: 8000,
-    topic: "iotlab/things/stromcek",
+    topic: "namakanyden/things/stromcek",
     clientId: `web-client-stromcek_${Math.random().toString(36).substr(2, 9)}`,
 };
 
