@@ -20,11 +20,12 @@ def on_message(client: mqtt.Client, userdata, msg: mqtt.MQTTMessage):
             serial.open()
 
         # decode and log received message
-        message = msg.payload.decode('utf-8')
+        message = msg.payload.decode('ascii')
         logger.debug(f'received "{message}"')
 
         # write message to serial port
-        serial.write(msg.payload)
+        serial.write(message.encode('ascii'))
+        serial.write(b'\r\n')
         logger.info(f'Message was written to {serial.port}')
         serial.close()
 
