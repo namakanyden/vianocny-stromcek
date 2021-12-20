@@ -9,7 +9,6 @@ from time import sleep
 
 # create serial object
 serial = Serial()
-serial.baudrate = 9600
 #
 # device.open()
 # data = bytearray('hello world\n', 'utf-8')
@@ -56,18 +55,20 @@ def main():
     parser.add_argument('--topic', type=str, default='namakanyden/things/stromcek',
                         help='name of the topic where to listen')
     parser.add_argument('--serial', type=str, help='serial port', required=True)
+    parser.add_argument('--baudrate', type=int, help='baudrate', default=115200)
 
     args = parser.parse_args()
 
     try:
         # open serial port
         serial.port = args.serial
+        serial.baudrate = args.baudrate
         serial.open()
 
         while True:
-            data = bytearray('hello world\n', 'utf-8')
+            data = bytearray('kurnik sopa\n', 'utf-8')
             serial.write(data)
-            print('.', end='')
+            print('.')
             sleep(5)
 
         # connect to mqtt broker
