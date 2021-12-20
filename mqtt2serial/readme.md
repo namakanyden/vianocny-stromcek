@@ -4,6 +4,7 @@ Jednoduchý nástroj, pomocou ktorého je možné preposielať správy prijaté 
 mikrokontroléra. Použitie je ideálne pre mikrokontroléry, ktoré nie sú vybavené WiFi alebo ethernetovým modulom (napr.
 _Arduino UNO_, _Raspberry Pi Pico_, _BBC Micro:bit_ a iné).
 
+
 ## Inštalácia
 
 Projekt používa pre zjednodušenie práce nástroj [Poetry](https://python-poetry.org/). Pre inštaláciu všetkých potrebných
@@ -12,6 +13,7 @@ závislostí tým pádom stačí z príkazového riadku spustiť príkaz:
 ```bash
 $ poetry install
 ```
+
 
 ## Použitie
 
@@ -36,11 +38,13 @@ Ak je skript `mqtt2serial` spustiteľný, bude jeho použitie vyzerať nasledovn
 $ mqtt2serial --serial /dev/ttyUSB0
 ```
 
+
 ## Tvorba vlastných klientov
 
 Ak vytvárate vlastný klientsky program, pre čítanie zo sériovej linky môžete využiť nasledovné fragmenty kódov.
 
-## Arduino SDK
+
+### Arduino SDK
 
 Ak chcete čítať správy zo sériovej linky na mikrokontroléroch _Arduino_, resp. na mikrokontroléroch, ktoré je možné
 programovať pomocou _Arduino SDK_, môžete použiť nasledujúci fragment kódu:
@@ -61,7 +65,8 @@ int main() {
 }
 ```
 
-## MicroPython
+
+### MicroPython
 
 Ak chcete čítať správy zo sériovej linky na mikrokontroléroch, do ktorých je možné nahrať
 jazyk [MicroPython](http://micropython.org/) (napr. _ESP32_, _BBC Micro:bit_, _Raspberry Pi Pico_ a iné), môžete použiť
@@ -73,6 +78,7 @@ while True:
     data = input()
     print('Received: ' + data)
 ```
+
 
 ## Poďakovanie
 
