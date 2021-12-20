@@ -5,19 +5,9 @@ import logging
 from serial import Serial
 from serial.serialutil import SerialException
 import argparse
-from time import sleep
 
 # create serial object
 serial = Serial()
-#
-# device.open()
-# data = bytearray('hello world\n', 'utf-8')
-# device.write(data)
-# xxx = device.read()
-# print(xxx)
-# device.close()
-# print('closed')
-
 
 logging.basicConfig(encoding='utf-8', level=logging.DEBUG, format='%(asctime)s: %(message)s')
 logger = logging.getLogger('mqtt2serial')
@@ -63,13 +53,8 @@ def main():
         # open serial port
         serial.port = args.serial
         serial.baudrate = args.baudrate
+        logger.info(f'Opening port {serial.port} with baudrate {serial.baudrate}')
         serial.open()
-
-        while True:
-            data = bytearray('kurnik sopa\n', 'utf-8')
-            serial.write(data)
-            print('.')
-            sleep(5)
 
         # connect to mqtt broker
         logger.info(f'Connecting to MQTT Broker {args.host}:{args.port}')
