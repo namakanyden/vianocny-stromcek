@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "mqtt2serial"
+version = "0.1.0"
+description = ""
+authors = ["Miroslav Biňas <miroslav.binas@tuke.sk>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+paho-mqtt = "^1.6.1"
+pyserial = "^3.5"
+ipython = "^7.29.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+app = "main"
