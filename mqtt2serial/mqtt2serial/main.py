@@ -64,6 +64,8 @@ def main():
         client.subscribe(args.topic)
 
         # loop
+        logger.info('To interrupt press CTRL+C')
+        print()
         client.loop_forever()
 
     # wrong serial port

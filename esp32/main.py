@@ -1,81 +1,74 @@
-from machine import Pin, WDT, Timer
+from machine import Pin, Timer, RTC
+import ntptime
 import random
 import ujson
 import utime
 import gc
 from umqtt.robust import MQTTClient
 
-from settings import WIFI_NETWORKS, MQTT_BROKER, WDT_TIMEOUT
-from helper import *
-import effects
+from config import WIFI_NETWORKS, MQTT_BROKER, WDT_TIMEOUT
+from effects import effects, SetColorEffect
+from logging import info, error
+    
+        
+def do_connect(wifis):
+    import network
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    if not wlan.isconnected():
+        networks = wlan.scan()
+        for net in networks:
+            ssid = net[0].decode('utf-8')
+            if ssid in wifis:
+                info(f'Connecting to network "{ssid}"...')
+                wlan.connect(ssid, wifis[ssid])
+            
+                while not wlan.isconnected():
+                    utime.sleep_ms(100)
+                ntptime.settime()
+            else:
+                raise OSError(f"Can't connect to \"{ssid}\" WiFi network. Check your configuration")
+                
+    info(f'Network config: {wlan.ifconfig()}')
+    
+    return wlan
 
 
 def on_message(topic, message):
-    global scenario
-    
     try:
-        # decode the data
-        topic = topic.decode('utf-8')
-        message = message.decode('utf-8')
+        global scenario
         
-        # log message
-        log('message received: "{}: {}"'.format(topic, message))
+        # create dict from incomming data
+        payload = ujson.loads(message.decode('utf-8'))
+        info(f'Received JSON: {payload}')
         
-        # create dict and extract general data
-        payload = ujson.loads(message)
-        color = Color(payload.get('color', '#000000'))
-        delay = int(payload.get('duration', 100))
-        name = payload.get('scenario', 'clear')
+        # find effect by it's name and run it
+        name = payload['scenario']
+        effect = next(filter(lambda x: x.name == name, effects))
+        info(f'Running scenario {name}')
+        scenario = effect.run(pixels, **payload)
         
-        # play scenario
-        if name == 'clear':
-            scenario = effects.clear(pixels)
-            
-        elif name == 'rainbow':
-            scenario = effects.rainbow_cycle(pixels, delay)
-        
-        elif name == 'set color':
-            scenario = effects.set_color(pixels, color)
-        
-        elif name == 'bounce':
-            scenario = effects.bounce(pixels, color, delay)
-
-        elif name == 'cycle':
-            scenario = effects.cycle(pixels, color, delay)
-        
-        elif name == 'random color':
-            scenario = effects.set_random_color(pixels, delay)
-        
-        elif name == 'fade':
-            scenario = effects.fade(pixels, color, delay)
-
-        elif name == 'knight rider':
-            scenario = effects.knight_rider(pixels, color, delay)
-        
-        elif name == 'part of tree':
-            index = int(payload.get('index', 0))
-            parts = int(payload.get('parts', 10))
-            
-            scenario = effects.light_up_part_of_tree(pixels, color, parts, index)
-        
-        else:
-            log('Error: Unknown scenario "{}"'.format(name))
-            return
-    except Exception as ex:
-        log('Error: {}'.format(ex))
-        return
-    finally:
+        # cleanup
         gc.collect()
+     
+    # missing name of scenario
+    except KeyError:
+        error('Missing scenario name. Invalid JSON object?')
+        error(f'Received message was: {message.decode("utf-8")}')
+        
+    # invalid JSON
+    except ValueError:
+        error('Invalid data received. Not a JSON object?')
+        error(f'Received message was: {message.decode("utf-8")}')
+        
+    # if effect was not found
+    except StopIteration:
+        error(f'Unknown scenario "{name}"')
 
     
 def wake_up(timer):
     global check_mqtt
     check_mqtt = True
-    
-    
-def mqtt_ping(timer):
-    global ping_mqtt
-    ping_mqtt = True
     
     
 def mqtt_connect():
@@ -86,48 +79,50 @@ def mqtt_connect():
     
     # subscribe to mqtt topics
     for topic in MQTT_BROKER['topics']:
-        log('subscribing to topic {}'.format(topic))
+        info(f'Subscribing to topic {topic}')
         client.subscribe(topic)
         
     return client
+
+
+def main():
+    global scenario, check_mqtt, client
     
-#if __name__ == '__main__':global scenario, check_mqtt, client
-scenario = effects.clear(pixels)
-check_mqtt = False
-ping_mqtt = False
-
-# set Watchdog first
-wdt = WDT(timeout = WDT_TIMEOUT)
-  
-# connect to wifi
-wlan = do_connect(WIFI_NETWORKS)
-
-# connect to mqtt broker
-client = mqtt_connect()
+    # show info list of all loaded effects
+    names = [effect.name for effect in effects]
+    info(f'Loaded {len(effects)} effects: {", ".join(names)}')
     
-# set timer for periodic mqtt updates
-timer = Timer(1)
-timer.init(period=1000, mode=Timer.PERIODIC, callback=wake_up)
+    # set default scenario to color
+    effect = SetColorEffect()
+    scenario = effect.run(pixels, color = (0, 255, 0))
+    
+    check_mqtt = False
 
-# set timer for periodic ping of mqtt server/broker
-timer = Timer(2)
-timer.init(period = 60 * 1000, mode=Timer.PERIODIC, callback=mqtt_ping)
+    # connect to wifi
+    do_connect(WIFI_NETWORKS)
 
-# main loop
-log('waiting for message...')
-
-while True:
-    if check_mqtt == True:
-        client.check_msg()
-        check_mqtt = False
-        wdt.feed()
+    # connect to mqtt broker
+    client = mqtt_connect()
         
-    if ping_mqtt == True:
-        #log('pinging mqtt')
-        client.ping()
-        ping_mqtt = False
+    # set timer for periodic mqtt updates
+    timer = Timer(1)
+    timer.init(period=1000, mode=Timer.PERIODIC, callback=wake_up)
+
+    # main loop
+    info('Waiting for message...')
+
+    while True:
+        if check_mqtt == True:
+            client.check_msg()
+            check_mqtt = False
+            #wdt.feed()
+            
+        # if scenario is not generator, then take a break
+        if scenario is None:
+            utime.sleep_ms(400)
+        else:
+            next(scenario)
         
-    if scenario is None:
-        utime.sleep_ms(400)
-    else:
-        next(scenario)
+    
+if __name__ == '__main__':
+    main()
