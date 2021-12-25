@@ -7,12 +7,23 @@ _Arduino UNO_, _Raspberry Pi Pico_, _BBC Micro:bit_ a iné).
 
 ## Inštalácia
 
-Projekt používa pre zjednodušenie práce nástroj [Poetry](https://python-poetry.org/). Pre inštaláciu všetkých potrebných
-závislostí tým pádom stačí z príkazového riadku spustiť príkaz:
+Projekt používa pre zjednodušenie práce nástroj [Poetry](https://python-poetry.org/). Pre vytvorenie a nainštalovanie 
+balíka do vlastného prostredia najprv pomocou príkazu `build` vytvorte inštalačný balík:
 
 ```bash
-$ poetry install
+$ poetry build
 ```
+
+V priečinku projektu sa vytvorí nový priečinok s názvom `dist/`, v ktorom sa bude nachádzať inštalačný balík s príponou 
+`*whl` (wheel). Tento balík následne nainštalujte do svojej inštalácie jazyka Python, resp. do virtuálneho prostredia 
+jazyka príkazom:
+
+```bash
+$ cd dist/
+$ pip install mqtt2serial-0.2.0-py3-none-any.whl
+```
+
+Od tohto momentu môžete nástroj `mqtt2serial` voľne používať vo svojom prostredí.
 
 
 ## Použitie

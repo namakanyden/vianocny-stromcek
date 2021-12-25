@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "mqtt2serial"
-version = "0.1.0"
-description = ""
-authors = ["Miroslav Biňas <miroslav.binas@tuke.sk>"]
+version = "0.2.0"
+description = "CLI tool for passing messages received from MQTT to serial link."
+authors = ["mirek <mirek@namakanyden.sk>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -17,4 +17,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-app = "mqtt2serial.main:main"
+mqtt2serial = "mqtt2serial.main:main"

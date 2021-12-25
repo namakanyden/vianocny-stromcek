@@ -49,7 +49,7 @@ window.addEventListener("load", function (event) {
 
             // get color and delay
             const color = document.getElementById("colorpicker").value;
-            const delay = document.getElementById("delay").value;
+            const delay = document.getElementById("duration").valueAsNumber;
 
             // prepare data
             const payload = {
