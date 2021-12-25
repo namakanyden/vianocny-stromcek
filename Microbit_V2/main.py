@@ -1,3 +1,7 @@
+#
+#Author : Juraj Remen
+#
+
 from microbit import sleep, display, pin0, uart
 from random import randint
 import neopixel
